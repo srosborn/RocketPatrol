@@ -4,12 +4,29 @@ class FastCar extends Phaser.GameObjects.Sprite {
         scene.add.existing(this);
         this.points = pointValue;
         this.moveSpeed = game.settings.carSpeed;
-        this.upDown = false;
+        this.upDown = true;
     }
 
     update() {
         this.x -= this.moveSpeed;
-        //this.y += 1;
+        console.log(this.y);
+        console.log(this.upDown);
+
+        if(!this.upDown && this.y <= 132){
+            this.y += 0.5;
+        }
+
+        if(this.upDown && this.y >= 80) {
+            this.y -= 0.5;
+        }
+
+        if(this.y <= 80) {
+            this.upDown = false;
+        }
+
+        if(this.y >= 132) {
+            this.upDown = true;
+        }
 
         if(this.x <= 0 - this.width) {
             this.reset();
