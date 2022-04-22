@@ -37,18 +37,19 @@ class Play extends Phaser.Scene {
         keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
         keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
         keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
-        this.car1 = new FastCar(this, game.config.width + borderUISize*18, borderUISize*3.7, 'car4', 0, 0).setOrigin(0, 0);
-        this.car2 = new FastCar(this, game.config.width + borderUISize*12, borderUISize*3.7, 'car4', 0, 0).setOrigin(0, 0);
-        this.car3 = new FastCar(this, game.config.width + borderUISize*6, borderUISize*3.7, 'car4', 0, 0).setOrigin(0, 0);
-        this.car4 = new FastCar(this, game.config.width + borderUISize, borderUISize*3.7, 'car4', 0, 0).setOrigin(0, 0);
-        this.ship01 = new Spaceship(this, game.config.width + borderUISize*21, borderUISize*6.3, 'car2', 0, 30).setOrigin(0, 0);
-        this.ship04 = new Spaceship(this, game.config.width + borderUISize*14, borderUISize*6.3, 'car5', 0, 30).setOrigin(0, 0);
-        this.ship02 = new Spaceship(this, game.config.width + borderUISize*7, borderUISize*6.3, 'car3', 0, 20).setOrigin(0,0);
-        this.ship07 = new Spaceship(this, game.config.width - borderUISize*12, borderUISize*9, 'car8', 0, 30).setOrigin(0, 0);
-        this.ship03 = new Spaceship(this, game.config.width, borderUISize*6 + borderPadding*9, 'car4', 0, 10).setOrigin(0,0);
-        this.ship05 = new Spaceship(this, game.config.width - borderUISize*12, borderUISize*12, 'car6', 0, 30).setOrigin(0, 0);
-        this.ship06 = new Spaceship(this, game.config.width - borderUISize*12, borderUISize*12, 'car7', 0, 30).setOrigin(0, 0);
-        this.ship08 = new Spaceship(this, game.config.width - borderUISize*12, borderUISize*9, 'car9', 0, 30).setOrigin(0, 0);
+        this.car1 = new FastCar(this, game.config.width - borderUISize*18, borderUISize*3.5, 'car4', 0, 0).setOrigin(0, 0);
+        this.car2 = new FastCar(this, game.config.width - borderUISize*12, borderUISize*3.5, 'car4', 0, 0).setOrigin(0, 0);
+        this.car3 = new FastCar(this, game.config.width - borderUISize*6, borderUISize*3.5, 'car4', 0, 0).setOrigin(0, 0);
+        this.car4 = new FastCar(this, game.config.width - borderUISize, borderUISize*3.5, 'car4', 0, 0).setOrigin(0, 0);
+        this.ship01 = new Spaceship(this, game.config.width - borderUISize*21, borderUISize*6.3, 'car2', 0, 30).setOrigin(0, 0);
+        this.ship04 = new Spaceship(this, game.config.width - borderUISize*14, borderUISize*6.3, 'car', 0, 30).setOrigin(0, 0);
+        this.ship02 = new Spaceship(this, game.config.width - borderUISize*7, borderUISize*6.3, 'car7', 0, 20).setOrigin(0,0);
+        this.ship08 = new Spaceship(this, game.config.width - borderUISize*14, borderUISize*9, 'car9', 0, 30).setOrigin(0, 0);
+        this.ship07 = new Spaceship(this, game.config.width - borderUISize*8, borderUISize*9, 'car8', 0, 30).setOrigin(0, 0);
+        this.ship03 = new Spaceship(this, game.config.width - borderUISize*2, borderUISize*9, 'car5', 0, 10).setOrigin(0,0);
+        this.ship09 = new Spaceship(this, game.config.width - borderUISize*20, borderUISize*9, 'car3', 0, 10).setOrigin(0,0);
+        this.ship05 = new Spaceship(this, game.config.width - borderUISize*18, borderUISize*12, 'car6', 0, 30).setOrigin(0, 0);
+        this.ship06 = new Spaceship(this, game.config.width - borderUISize*9, borderUISize*12, 'car7', 0, 30).setOrigin(0, 0);
         this.anims.create({
             key: 'explode',
             frames: this.anims.generateFrameNumbers('explosion', { start: 0, end: 9, first: 0}),
@@ -106,6 +107,7 @@ class Play extends Phaser.Scene {
             this.ship06.update();
             this.ship07.update();
             this.ship08.update();
+            this.ship09.update();
             this.car1.update();
             this.car2.update();
             this.car3.update();
@@ -153,6 +155,11 @@ class Play extends Phaser.Scene {
             this.resetCombo();
             this.p1Rocket.reset(); 
         }
+        if (this.checkCollision(this.p1Rocket, this.ship09)) {
+            this.deathNoise();
+            this.resetCombo();
+            this.p1Rocket.reset(); 
+        }
         if (this.checkCollision(this.p1Rocket, this.car1)) {
             this.deathNoise();
             this.resetCombo();
@@ -189,6 +196,7 @@ class Play extends Phaser.Scene {
     }
 
     scorePoints() {
+        this.sound.play('point');
         if (!this.comboActive) {
             this.comboActive = true;
         }
