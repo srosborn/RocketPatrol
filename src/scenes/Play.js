@@ -37,14 +37,17 @@ class Play extends Phaser.Scene {
         keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
         keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
         keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
-        this.car3 = new FastCar(this, game.config.width + borderUISize*6, borderUISize*3.7, 'car', 0, 0).setOrigin(0, 0);
-        this.ship01 = new Spaceship(this, game.config.width + borderUISize*6, borderUISize*4, 'car2', 0, 30).setOrigin(0, 0);
-        this.ship02 = new Spaceship(this, game.config.width + borderUISize*3, borderUISize*6.3, 'car3', 0, 20).setOrigin(0,0);
+        this.car1 = new FastCar(this, game.config.width + borderUISize*18, borderUISize*3.7, 'car4', 0, 0).setOrigin(0, 0);
+        this.car2 = new FastCar(this, game.config.width + borderUISize*12, borderUISize*3.7, 'car4', 0, 0).setOrigin(0, 0);
+        this.car3 = new FastCar(this, game.config.width + borderUISize*6, borderUISize*3.7, 'car4', 0, 0).setOrigin(0, 0);
+        this.car4 = new FastCar(this, game.config.width + borderUISize, borderUISize*3.7, 'car4', 0, 0).setOrigin(0, 0);
+        this.ship01 = new Spaceship(this, game.config.width + borderUISize*21, borderUISize*6.3, 'car2', 0, 30).setOrigin(0, 0);
+        this.ship04 = new Spaceship(this, game.config.width + borderUISize*14, borderUISize*6.3, 'car5', 0, 30).setOrigin(0, 0);
+        this.ship02 = new Spaceship(this, game.config.width + borderUISize*7, borderUISize*6.3, 'car3', 0, 20).setOrigin(0,0);
+        this.ship07 = new Spaceship(this, game.config.width - borderUISize*12, borderUISize*9, 'car8', 0, 30).setOrigin(0, 0);
         this.ship03 = new Spaceship(this, game.config.width, borderUISize*6 + borderPadding*9, 'car4', 0, 10).setOrigin(0,0);
-        this.ship04 = new Spaceship(this, game.config.width - borderUISize*3, borderUISize*4, 'car5', 0, 30).setOrigin(0, 0);
         this.ship05 = new Spaceship(this, game.config.width - borderUISize*12, borderUISize*12, 'car6', 0, 30).setOrigin(0, 0);
-        this.ship06 = new Spaceship(this, game.config.width - borderUISize*12, borderUISize*3.7, 'car7', 0, 30).setOrigin(0, 0);
-        this.ship07 = new Spaceship(this, game.config.width - borderUISize*12, borderUISize*6.3, 'car8', 0, 30).setOrigin(0, 0);
+        this.ship06 = new Spaceship(this, game.config.width - borderUISize*12, borderUISize*12, 'car7', 0, 30).setOrigin(0, 0);
         this.ship08 = new Spaceship(this, game.config.width - borderUISize*12, borderUISize*9, 'car9', 0, 30).setOrigin(0, 0);
         this.anims.create({
             key: 'explode',
@@ -52,6 +55,8 @@ class Play extends Phaser.Scene {
             frameRate: 30
         });
         this.p1Score = 0;
+        this.combo = 0;
+        this.comboActive = false;
           // display score
         let scoreConfig = {
             fontFamily: 'Courier',
@@ -63,9 +68,9 @@ class Play extends Phaser.Scene {
             top: 5,
             bottom: 5,
             },
-            fixedWidth: 100
         }
-        this.scoreLeft = this.add.text(borderPadding, borderUISize - borderPadding*2.3, this.p1Score, scoreConfig);
+        this.scoreLeft = this.add.text(borderPadding, borderUISize - borderPadding*2.3, "Score: " + this.p1Score, scoreConfig);
+        this.comboCount = this.add.text(game.config.width / 2.5, borderUISize - borderPadding*2.3, "Combo: " + this.combo, scoreConfig);
 
         this.gameOver = false;
         scoreConfig.fixedWidth = 0;
@@ -84,6 +89,12 @@ class Play extends Phaser.Scene {
             this.scene.start("menuScene");
         }
 
+        if (this.p1Rocket.y <= borderUISize) {
+            this.isFiring = false;
+            this.scorePoints();
+            this.p1Rocket.reset();
+        }
+
         this.starfield.tilePositionX -= 8;
         if (!this.gameOver) {
             this.p1Rocket.update();
@@ -95,28 +106,74 @@ class Play extends Phaser.Scene {
             this.ship06.update();
             this.ship07.update();
             this.ship08.update();
+            this.car1.update();
+            this.car2.update();
             this.car3.update();
+            this.car4.update();
         }
 
         // check collisions
-        /*
-        if(this.checkCollision(this.p1Rocket, this.ship03)) {
+        if(this.checkCollision(this.p1Rocket, this.ship01)) {
+            this.deathNoise();
+            this.resetCombo();
             this.p1Rocket.reset();
-            this.shipExplode(this.ship03);   
         }
         if (this.checkCollision(this.p1Rocket, this.ship02)) {
+            this.deathNoise();
+            this.resetCombo();
             this.p1Rocket.reset();
-            this.shipExplode(this.ship02);   
         }
-        if (this.checkCollision(this.p1Rocket, this.ship01)) {
+        if (this.checkCollision(this.p1Rocket, this.ship03)) {
+            this.deathNoise();
+            this.resetCombo();
             this.p1Rocket.reset();
-            this.shipExplode(this.ship01);   
+        }
+        if (this.checkCollision(this.p1Rocket, this.ship04)) {
+            this.deathNoise();
+            this.resetCombo();
+            this.p1Rocket.reset();
+        }
+        if (this.checkCollision(this.p1Rocket, this.ship05)) {
+            this.deathNoise();
+            this.resetCombo();
+            this.p1Rocket.reset();  
+        }
+        if (this.checkCollision(this.p1Rocket, this.ship06)) {
+            this.deathNoise();
+            this.resetCombo();
+            this.p1Rocket.reset(); 
+        }
+        if (this.checkCollision(this.p1Rocket, this.ship07)) {
+            this.deathNoise();
+            this.resetCombo();
+            this.p1Rocket.reset(); 
+        }
+        if (this.checkCollision(this.p1Rocket, this.ship08)) {
+            this.deathNoise();
+            this.resetCombo();
+            this.p1Rocket.reset(); 
+        }
+        if (this.checkCollision(this.p1Rocket, this.car1)) {
+            this.deathNoise();
+            this.resetCombo();
+            this.p1Rocket.reset();
+        }
+        if (this.checkCollision(this.p1Rocket, this.car2)) {
+            this.deathNoise();
+            this.resetCombo();
+            this.p1Rocket.reset();
         }
         if (this.checkCollision(this.p1Rocket, this.car3)) {
+            this.deathNoise();
+            this.resetCombo();
             this.p1Rocket.reset();
-            this.shipExplode(this.ship01);   
         }
-        */
+        if (this.checkCollision(this.p1Rocket, this.car4)) {
+            this.deathNoise();
+            this.resetCombo();
+            this.p1Rocket.reset();
+        }
+        
     }
 
     checkCollision(rocket, ship) {
@@ -131,6 +188,45 @@ class Play extends Phaser.Scene {
         }
     }
 
+    scorePoints() {
+        if (!this.comboActive) {
+            this.comboActive = true;
+        }
+        this.combo += 1;
+        this.comboCount.text = "Combo: " + this.combo;
+        if (this.combo > this.p1Score) {
+            this.p1Score = this.combo;
+            this.scoreLeft.text = "Score: " + this.p1Score;
+        }
+    }
+
+    deathNoise() {
+        let rando = Math.floor(Math.random() * 4);
+        if (rando == 0) {
+            this.sound.play('hurt1');
+        } else if (rando == 1) {
+            this.sound.play('hurt2');
+        } else if (rando == 2) {
+            this.sound.play('hurt3');
+        } else {
+            this.sound.play('hurt4');
+        }
+    }
+
+    resetCombo() {
+        this.comboActive = false;
+        if(this.combo > this.p1Score) {
+            this.p1Score = this.combo;
+        }
+        if (this.combo > 0) {
+            this.comboCount.text = "Combo Broken";
+        } else {
+            this.comboCount.text = "Combo: " + this.combo;
+        }
+        this.combo = 0;
+        
+    }
+    
     shipExplode(ship) {
         // temporarily hide ship
         ship.alpha = 0;
@@ -144,16 +240,5 @@ class Play extends Phaser.Scene {
         }); 
         this.p1Score += ship.points;
         this.scoreLeft.text = this.p1Score;
-        let rando = Math.floor(Math.random() * 4);
-        if (rando == 0) {
-            this.sound.play('hurt1');
-        } else if (rando == 1) {
-            this.sound.play('hurt2');
-        } else if (rando == 2) {
-            this.sound.play('hurt3');
-        } else {
-            this.sound.play('hurt4');
-        }
-        
       }
 }
