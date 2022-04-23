@@ -8,11 +8,14 @@ class Menu extends Phaser.Scene {
         this.load.audio('sfx_select', './assets/assets_blip_select12.wav');
         this.load.audio('sfx_explosion', './assets/assets_explosion38.wav');
         this.load.audio('sfx_rocket', './assets/assets_rocket_shot.wav');
+        this.load.audio('run', './assets/Run.wav');
+        this.load.audio('pico', './assets/pico.wav');
         this.load.audio('hurt1', './assets/hurt1.mp3');
         this.load.audio('hurt2', './assets/hurt2.mp3');
         this.load.audio('hurt3', './assets/hurt3.mp3');
         this.load.audio('hurt4', './assets/hurt4.mp3');
         this.load.audio('point', './assets/scofe.wav');
+        this.load.audio('music', './assets/music.mp3');
       }
     
     create() {
@@ -29,8 +32,8 @@ class Menu extends Phaser.Scene {
             fixedWidth: 0
         }
 
-        this.add.text(game.config.width/2, game.config.height/2 - borderUISize - borderPadding, 'ROCKET PATROL', menuConfig).setOrigin(0.5);
-        this.add.text(game.config.width/2, game.config.height/2, 'Use ←→ arrows to move & (F) to fire', menuConfig).setOrigin(0.5);
+        this.add.text(game.config.width/2, game.config.height/2 - borderUISize - borderPadding, 'Speedway Survivor', menuConfig).setOrigin(0.5);
+        this.add.text(game.config.width/2, game.config.height/2, 'Use ←→ arrows to move & (F) to Run', menuConfig).setOrigin(0.5);
         menuConfig.backgroundColor = '#00FF00';
         menuConfig.color = '#000';
         this.add.text(game.config.width/2, game.config.height/2 + borderUISize + borderPadding, 'Press ← for Novice or → for Expert', menuConfig).setOrigin(0.5);
@@ -46,8 +49,9 @@ class Menu extends Phaser.Scene {
               carSpeed: 3,
               gameTimer: 60000    
             }
-            this.sound.play('sfx_select');
-            this.scene.start('playScene');    
+            this.sound.play('pico');
+            this.scene.start('playScene');   
+            this.sound.play('music'); 
           }
           if (Phaser.Input.Keyboard.JustDown(keyRIGHT)) {
             // hard mode
@@ -56,8 +60,9 @@ class Menu extends Phaser.Scene {
               carSpeed: 4,
               gameTimer: 45000    
             }
-            this.sound.play('sfx_select');
+            this.sound.play('pico');
             this.scene.start('playScene');    
+            this.sound.play('music');
           }
     }
 }
