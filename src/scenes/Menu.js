@@ -62,7 +62,7 @@ class Menu extends Phaser.Scene {
             }
             this.sound.play('pico');
             this.scene.start('playScene');    
-            this.sound.play('music');
+            //this.sound.play('music');
           }
     }
 }
