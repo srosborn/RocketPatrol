@@ -7,7 +7,6 @@ class Play extends Phaser.Scene {
         this.load.image('rocket', './assets/rocket.png');
         this.load.image('car', './assets/car1.png');
         this.load.image('man', './assets/man.png');
-        this.load.image('dead', './assets/Dead.png');
         this.load.image('car2', './assets/car2.png');
         this.load.image('car3', './assets/car3.png');
         this.load.image('car4', './assets/car4.png');
