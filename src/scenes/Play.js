@@ -157,7 +157,6 @@ class Play extends Phaser.Scene {
         }
         if (this.checkCollision(this.p1Rocket, this.ship09)) {
             this.deathNoise();
-            this.p1Rocket.setTexture('dead');
             this.resetCombo();
             this.p1Rocket.reset(); 
         }
